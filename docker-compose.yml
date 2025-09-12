@@ -31,6 +31,22 @@ services:
     healthcheck:
       disable: false
 
+  upload-proxy:
+    container_name: upload_proxy
+    #image: ghcr.io/jamescullum/multipart-upload-proxy:main
+    image: shukebeta/multipart-upload-proxy:unified-compression
+    environment:
+      - IMG_MAX_WIDTH=1600
+    #  - IMG_MAX_HEIGHT=4096
+      - FORWARD_DESTINATION=http://immich-server:2283/api/assets
+      - FILE_UPLOAD_FIELD=assetData
+      - LISTEN_PATH=/api/assets
+    ports:
+      - "6743:6743"
+    restart: always
+    depends_on:
+      - immich-server
+
   immich-machine-learning:
     container_name: immich_machine_learning
     # For hardware acceleration, add one of -[armnn, cuda, rocm, openvino, rknn] to the image tag.

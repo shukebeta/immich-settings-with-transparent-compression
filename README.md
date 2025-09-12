@@ -98,6 +98,20 @@ DEST_DIR1="remote1:/backup/path"
 DEST_DIR2="remote2:/backup/path"
 ```
 
+### Crontab Setup
+
+To run the backup script automatically, add it to your crontab. Example to run every 5 minutes:
+
+```bash
+# Edit crontab
+crontab -e
+
+# Add this line (adjust path to match your script location)
+*/5 * * * * /path/to/sync_files.sh >> /tmp/sync_files.log 2>&1
+```
+
+This will run the backup every 5 minutes and log output to `/tmp/sync_files.log`.
+
 ## Verification
 
 After setup, verify the compression proxy is working:

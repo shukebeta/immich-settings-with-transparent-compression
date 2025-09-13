@@ -26,12 +26,15 @@ Client → Nginx → Immich Server
 
 The compression proxy supports the following environment variables:
 
-- `IMG_MAX_WIDTH`: Maximum image width (default: 1600px)
-- `IMG_MAX_HEIGHT`: Maximum image height (optional)
-- `JPEG_QUALITY`: JPEG compression quality 1-100 (configurable in image)
+- `IMG_MAX_NARROW_SIDE`: Maximum size for the narrow side of the image (recommended approach)
+- `IMG_MAX_WIDTH`: Maximum image width (legacy method, used when IMG_MAX_NARROW_SIDE is not set)
+- `IMG_MAX_HEIGHT`: Maximum image height (legacy method, used when IMG_MAX_NARROW_SIDE is not set)
+- `JPEG_QUALITY`: JPEG compression quality 1-100 (default: 75, recommended: 95 for better quality)
 - `FORWARD_DESTINATION`: Target Immich API endpoint
 - `FILE_UPLOAD_FIELD`: Multipart field name for asset data
 - `LISTEN_PATH`: API path to intercept
+
+**Note**: `IMG_MAX_NARROW_SIDE` provides a more intelligent resizing approach by constraining the smaller dimension while maintaining aspect ratio. When set, it takes priority over `IMG_MAX_WIDTH` and `IMG_MAX_HEIGHT`.
 
 ### Nginx Configuration
 
@@ -129,16 +132,18 @@ Modify the `upload-proxy` service environment variables in `docker-compose.yml`:
 
 ```yaml
 environment:
-  - IMG_MAX_WIDTH=2048    # Increase for higher resolution
-  - IMG_MAX_HEIGHT=2048   # Set height limit
-  - JPEG_QUALITY=85       # Adjust quality (requires custom image)
+  - IMG_MAX_NARROW_SIDE=2048  # Recommended: set narrow side limit
+  - JPEG_QUALITY=95           # High quality compression
+  # Legacy options (only used when IMG_MAX_NARROW_SIDE is not set):
+  # - IMG_MAX_WIDTH=2048
+  # - IMG_MAX_HEIGHT=2048
 ```
 
 ## Based On
 
 - [Immich](https://immich.app) - Self-hosted photo and video management
 - [multipart-upload-proxy](https://github.com/shukebeta/multipart-upload-proxy) - Image compression proxy
-- Docker image: `shukebeta/multipart-upload-proxy:unified-compression`
+- Docker image: `shukebeta/multipart-upload-proxy-with-compression:latest`
 
 ## License
 

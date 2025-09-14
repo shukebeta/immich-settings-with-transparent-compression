@@ -36,8 +36,8 @@ services:
     #image: ghcr.io/jamescullum/multipart-upload-proxy:main
     image: shukebeta/multipart-upload-proxy-with-compression:latest
     environment:
-      - JPEG_QUALITY=95
-      - IMG_MAX_NARROW_SIDE=1920
+      - JPEG_QUALITY=85
+      - IMG_MAX_NARROW_SIDE=1600
       - FORWARD_DESTINATION=http://immich-server:2283/api/assets
       - FILE_UPLOAD_FIELD=assetData
       - LISTEN_PATH=/api/assets
